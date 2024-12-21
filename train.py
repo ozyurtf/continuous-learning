@@ -88,7 +88,11 @@ for item in os.listdir('frames'):
 for item in os.listdir('flows'):
     item_path = os.path.join('flows', item)
     if os.path.isdir(item_path):
-        shutil.rmtree(item_path)         
+        shutil.rmtree(item_path)       
+        
+models_folder = "models"
+if not os.path.exists(models_folder):
+    os.makedirs(models_folder)          
                 
 num_frames = min(num_frames, 127 - num_predictions)
 
@@ -189,10 +193,6 @@ for subfolder in video_train_subfolders:
             visualize_comparisons(predicted_next_flows_rgb, actual_flows_rgb, subfolder, file, "flows", i)        
             visualize_comparisons(predicted_next_imgs_inv_norm, actual_imgs_inv_norm[:, 1:], subfolder, file, "frames", i)
             ############ Visualizing Predictions of Next Frames and Optical Flows ###########
-            
-            ############ Preparing for the Next Step ############
-            i += 1     
-            ############ Preparing for the Next Step ############
                     
             ############ Loss Computation ###########
             img_loss   = nn.functional.mse_loss(predicted_next_imgs_norm, actual_imgs_norm[:,1:])
@@ -220,18 +220,16 @@ for subfolder in video_train_subfolders:
             state_optimizer.step()
             ############ Optimization ###########
             
+            if (i % 20 == 0): 
+                torch.save(image_feature_extraction.state_dict(), os.path.join(models_folder, "image_feature_extraction.pth"))
+                torch.save(horizontal_flow_reconstruction.state_dict(), os.path.join(models_folder, "horizontal_flow_reconstruction.pth"))
+                torch.save(vertical_flow_reconstruction.state_dict(), os.path.join(models_folder, "vertical_flow_reconstruction.pth"))
+                torch.save(image_reconstruction.state_dict(), os.path.join(models_folder, "image_reconstruction.pth"))
+                torch.save(state_prediction.state_dict(), os.path.join(models_folder, "state_prediction.pth"))
+                torch.save(rnn_cell.state_dict(), os.path.join(models_folder, "rnn_cell.pth"))
+                
+            ############ Preparing for the Next Step ############
+            i += 1   
             hidden_state = hidden_state.detach()
-            cell_state = cell_state.detach()            
-            
-models_folder = "models"
-if not os.path.exists(models_folder):
-    os.makedirs(models_folder)
-
-torch.save(image_feature_extraction.state_dict(), os.path.join(models_folder, "image_feature_extraction.pth"))
-torch.save(horizontal_flow_reconstruction.state_dict(), os.path.join(models_folder, "horizontal_flow_reconstruction.pth"))
-torch.save(vertical_flow_reconstruction.state_dict(), os.path.join(models_folder, "vertical_flow_reconstruction.pth"))
-torch.save(image_reconstruction.state_dict(), os.path.join(models_folder, "image_reconstruction.pth"))
-torch.save(state_prediction.state_dict(), os.path.join(models_folder, "state_prediction.pth"))
-torch.save(rnn_cell.state_dict(), os.path.join(models_folder, "rnn_cell.pth"))
-
-print(f"All models have been saved to the '{models_folder}' folder.")
+            cell_state = cell_state.detach()                  
+            ############ Preparing for the Next Step ############                
