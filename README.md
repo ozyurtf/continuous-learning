@@ -5,7 +5,7 @@ For illustration purposes, a very small number of videos are kept in this reposi
 After installing the libraries listed in `requirements.txt`, the training process can be started using the following code:  
 
 ```python 
-train.py --num_predictions 4 --embed_dim 512 --hidden_size 512 --stride 1 --num_frames 32 --resize_img 224 --patch_size 14
+python train.py --num_predictions 4 --embed_dim 512 --hidden_size 512 --stride 1 --num_frames 32 --resize_img 224 --patch_size 14
 ```  
 
 - `num_predictions` specifies the number of predictions made in each step. For example, if set to 4, the next 4 frames, optical flows, and states are predicted in the current step. The visualizations of the frame predictions and optical flow predictions are saved into the `flows` and `frames` folders for each video separately.  
@@ -19,5 +19,5 @@ train.py --num_predictions 4 --embed_dim 512 --hidden_size 512 --stride 1 --num_
 These are all optional parameters, and the code can also run with the simpler command:  
 
 ```python 
-train.py
+python train.py
 ```  
