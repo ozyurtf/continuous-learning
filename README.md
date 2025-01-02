@@ -1,4 +1,4 @@
-# Continuous Learning 
+# Continual Learning 
 
 
 For illustration purposes, a very small number of videos are kept in this repository, and the full dataset can be downloaded from here: [http://clevrer.csail.mit.edu](http://clevrer.csail.mit.edu).  
